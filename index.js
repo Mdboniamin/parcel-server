@@ -212,14 +212,20 @@ app.patch("/users/:id/role", verifyFBToken, verifyAdmin, async (req, res) => {
 app.get("/parcels", async (req, res) => {
   const { parcelsCollection } = req.collections;
   const query = {};
-  const { email, deliveryStatus } = req.query;
-  //parcels?email
+  const { email, deliveryStatus, riderAssigned } = req.query;
+
   if (email) {
     query.senderEmail = email;
   }
 
   if (deliveryStatus) {
-    query.deliveryStatus = deliveryStatus;
+    const statuses = deliveryStatus.split(","); // supports comma-separated list
+    query.deliveryStatus =
+      statuses.length > 1 ? { $in: statuses } : statuses[0];
+  }
+
+  if (riderAssigned === "true") {
+    query.riderId = { $exists: true };
   }
 
   const options = { sort: { createdAt: -1 } };
