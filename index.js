@@ -428,6 +428,7 @@ app.post("/payment-checkout-session", async (req, res) => {
     metadata: {
       parcelId: parcelInfo.parcelId,
       trackingId: parcelInfo.trackingId,
+      parcelName: parcelInfo.parcelName, // ✅ added this line
     },
     customer_email: parcelInfo.senderEmail,
     success_url: `${process.env.SITE_DOMAIN}/dashboard/payment-success?session_id={CHECKOUT_SESSION_ID}`,
